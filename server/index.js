@@ -15,10 +15,6 @@ app.use(express.json()); // To parse incoming JSON
 
 // ✅ Routes
 app.use('/api/users', userRoutes);
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
 
 // 🏠 Root route
 app.get('/', (req, res) => {

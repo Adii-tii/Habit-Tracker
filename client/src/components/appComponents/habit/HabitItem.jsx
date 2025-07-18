@@ -1,16 +1,16 @@
 import React from "react";
-import { CheckCircle2, Play, Pause, Timer, Trash, Flame } from "lucide-react";
+import { CheckCircle, Play, Pause, Timer, Trash, Flame } from "lucide-react";
 import formatTime from "../../../utilityFunctions/formatTIme";
 
 
 const HabitItem = ({ habit, toggleTimer, timerActive, timerSeconds, toggleCompletion, showHistory }) => {
+  {/* This habit will have an userId,name, category, progress, streak, time, completed, difficulty , priority, timespent, notes, targetTime, type, */}
 
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'high': return 'bg-red-100 text-red-700';
       case 'medium': return 'bg-yellow-100 text-yellow-700';
       case 'low': return 'bg-green-100 text-green-700';
-      default: return 'bg-gray-100 text-gray-700';
     }
   };
 
@@ -24,7 +24,7 @@ const HabitItem = ({ habit, toggleTimer, timerActive, timerSeconds, toggleComple
               habit.completed ? 'bg-yellow-500 border-yellow-500' : 'border-gray-300 hover:border-yellow-500'
             }`}
           >
-            {habit.completed && <CheckCircle2 size={14} className="text-black" />}
+            {habit.completed && <CheckCircle size={14} className="text-black" />}
           </button>
           <div className="grid grid-cols-2">
             <h3 className="font-medium text-gray-900">{habit.name}</h3>

@@ -1,11 +1,9 @@
 import React from "react";
 import { useState } from "react";
-
 import {Search} from "lucide-react";
-
 import HabitItem from "./HabitItem";
 
-const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleCompletion, showHistory }) => {
+const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleCompletion, showHistory, taskType }) => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');

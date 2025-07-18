@@ -10,7 +10,7 @@ import {
 
 import { auth } from "../firebase";
 
-const AuthModal = ({ type = "login", onClose }) => {
+const AuthModal = ({ type = "login", onClose , onSuccess}) => {
   const isSignup = type === "signup";
 
   const [email, setEmail] = useState("");
@@ -20,6 +20,7 @@ const AuthModal = ({ type = "login", onClose }) => {
   const [error, setError] = useState("");
 
   const handleAuth = async () => {
+    console.log(type);
     try {
       setError("");
       if (isSignup) {
@@ -27,16 +28,61 @@ const AuthModal = ({ type = "login", onClose }) => {
         await updateProfile(userCredential.user, {
           displayName: name || username,
         });
-        alert("Signup successful!");
+        try {
+          const res = await fetch('http://localhost:5000/api/users/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name:username, email, password }),
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            console.log('Sign up successful:', data);
+            alert("Signup successful!");
+            onClose();
+            onSuccess?.();
+          } else {
+            console.error('Login failed:', data.message);
+            alert(`Signup failed! ${data.message}`);
+          }
+        } catch (err) {
+          console.error('Error:', err);
+          alert(`Signup failed! Something went wrong`);
+        }
+      
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("Login successful!");
+        try {
+          const res = await fetch('http://localhost:5000/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            console.log('Login successful:', data);
+            alert("Login successful!");
+            onClose();
+            onSuccess?.();
+          } else {
+            console.error('Login failed:', data.message);
+            alert(`Login failed! ${data.message}`);
+          }
+        } catch (err) {
+          console.error('Error:', err);
+          alert('Login failed something went wrong');
+        }
+        
       }
-      onClose();
+      ;
     } catch (err) {
       setError(err.message);
     }
-  };
+  }; 
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();

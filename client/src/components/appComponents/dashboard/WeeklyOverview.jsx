@@ -3,7 +3,7 @@ import { BarChart, Flame } from "lucide-react";
 
 const WeeklyOverview = ({ weeklyProgress = [] }) => {
   return (
-    <div className="bg-black rounded-xl p-6 shadow-sm border border-gray-200">
+    <div className="bg-black rounded-xl p-6 shadow-sm border border-gray-200 ">
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-lg font-semibold text-gray-100">Weekly Overview</h2>
@@ -14,13 +14,13 @@ const WeeklyOverview = ({ weeklyProgress = [] }) => {
         </div>
         <p className="text-xs text-gray-500">Keep it up!</p>
       </div>
-      <div className=" rounded-lg p-4">
-        <div className="flex items-end justify-between h-24 space-x-2">
+      <div className=" rounded-lg">
+        <div className="flex items-end justify-between h-24 space-x-2 pt-[150px]">
           {weeklyProgress.map((day, index) => (
             <div key={index} className="flex flex-col items-center flex-1">
-              <div className="w-full bg-gray-800 rounded-t relative" style={{ height: '80px' }}>
+              <div className="w-full bg-gray-800 rounded-t relative" style={{ height: '120px' }}>
                 <div
-                  className="bg-yellow-500 rounded-t absolute bottom-0 w-full transition-all duration-300"
+                  className="bg-yellow-500 rounded-t absolute bottom-0 w-full transition-all duration-300 hover:scale-105 hover:bg-yellow-600"
                   style={{ height: `${day.completion}%` }}
                 ></div>
               </div>

@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import MyHabits from './MyHabits';
 import { Search, Plus } from 'lucide-react';
-import Sidebar from '../layout/Sidebar';
 
-const Tasks = ({ habits, toggleTimer, timerActive, timerSeconds, toggleCompletion, showHistory }) => {
+const Tasks = () => {
+  const {
+    habits,
+    toggleTimer,
+    timerActive,
+    timerSeconds,
+    toggleCompletion,
+    showHistory
+  } = useOutletContext();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
   return (
-    <div className="p-6 space-y-6">
-        <Sidebar />
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">My Tasks</h1>
         <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center space-x-2">
@@ -42,7 +50,6 @@ const Tasks = ({ habits, toggleTimer, timerActive, timerSeconds, toggleCompletio
         </select>
       </div>
 
-      {/* Reuse existing component */}
       <MyHabits
         habits={habits}
         toggleTimer={toggleTimer}
