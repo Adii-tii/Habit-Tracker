@@ -28,7 +28,7 @@ function Contact(){
                   </div>
                   <div>
                     <h4 className="font-semibold">Email</h4>
-                    <p className="text-gray-600">hello@loopin.com</p>
+                    <p className="text-gray-600">sableaditi8@gmail.com.com</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -37,7 +37,7 @@ function Contact(){
                   </div>
                   <div>
                     <h4 className="font-semibold">Phone</h4>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
+                    <p className="text-gray-600">+91 9121850093</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -46,7 +46,7 @@ function Contact(){
                   </div>
                   <div>
                     <h4 className="font-semibold">Address</h4>
-                    <p className="text-gray-600">123 Habit Street, Success City, SC 12345</p>
+                    <p className="text-gray-600">Jalandhar, Punjab, India</p>
                   </div>
                 </div>
               </div>
