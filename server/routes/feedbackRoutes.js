@@ -3,7 +3,6 @@ import nodemailer from 'nodemailer';
 
 const router = express.Router();
 
-// Configure nodemailer transporter (replace with real credentials in production)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {

@@ -9,18 +9,15 @@ const TodaysSummary = ({ habits = [], streakCount = 0 }) => {
   const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
   const animTimeout = useRef();
 
-  // On mount or when completionRate changes, fill to correct percentage
   useEffect(() => {
     setBarWidth(completionRate);
     return () => clearTimeout(animTimeout.current);
   }, [completionRate]);
 
-  // On hover, animate from 0 to completionRate
   const handleMouseEnter = () => {
     setBarWidth(0);
     animTimeout.current = setTimeout(() => setBarWidth(completionRate), 20);
   };
-  // On leave, immediately fill to correct percentage
   const handleMouseLeave = () => {
     clearTimeout(animTimeout.current);
     setBarWidth(completionRate);
@@ -33,7 +30,6 @@ const TodaysSummary = ({ habits = [], streakCount = 0 }) => {
         {today.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
       </div>
       <div className="space-y-3">
-        {/* Habits Completed Fill Animation */}
         <div
           className="relative overflow-hidden rounded-lg cursor-pointer"
           onMouseEnter={handleMouseEnter}
@@ -59,7 +55,6 @@ const TodaysSummary = ({ habits = [], streakCount = 0 }) => {
             </div>
           </div>
         </div>
-        {/* Streak Card */}
         <div className="bg-white bg-opacity-20 rounded-lg p-3">
           <div className="flex items-center justify-between">
             <div>

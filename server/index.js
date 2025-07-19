@@ -8,23 +8,21 @@ import reminderRoutes from './routes/reminderRoutes.js';
 import quickTaskRoutes from './routes/quickTaskRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 
-dotenv.config();         // Load env variables
-connectDB();             // Connect to MongoDB
+dotenv.config();
+connectDB();
 
 const app = express();
 
-// 🔒 Middlewares
 app.use(cors());
-app.use(express.json()); // To parse incoming JSON
+app.use(express.json());
 
-// ✅ Routes
+// Routes
 app.use('/api/users', userRoutes);
 app.use('/api/habits', habitRoutes);
 app.use('/api/reminders', reminderRoutes);
 app.use('/api/quicktasks', quickTaskRoutes);
 app.use('/api/feedback', feedbackRoutes);
 
-// 🏠 Root route
 app.get('/', (req, res) => {
   res.send('API is running...');
 });

@@ -94,6 +94,7 @@ const AuthModal = ({ type = "login", onClose, onSuccess, onSwitch }) => {
       await signInWithPopup(auth, provider);
       alert("Google login successful!");
       onClose();
+      onSuccess?.();
     } catch (err) {
       setError(err.message);
     }

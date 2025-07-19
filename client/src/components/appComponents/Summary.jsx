@@ -30,7 +30,7 @@ const TodaysSummary = ({ currentDate, completed = 3, total = 5, streak = 4 }) =>
 
       {/* Streak & Progress */}
       <div className="grid grid-cols-2 gap-4 mt-2">
-        {/* 🔥 Streak */}
+        {/* Streak */}
         <div className="flex items-center bg-yellow-50 rounded-lg p-4 shadow-sm">
           <Flame className="text-yellow-500 w-6 h-6 mr-3" />
           <div>
@@ -39,7 +39,7 @@ const TodaysSummary = ({ currentDate, completed = 3, total = 5, streak = 4 }) =>
           </div>
         </div>
 
-        {/* ✅ Progress Bar */}
+        {/* Progress Bar */}
         <div className="flex flex-col justify-center">
           <div className="flex justify-between text-sm text-gray-600 mb-1">
             <span>Progress</span>

@@ -210,11 +210,8 @@ const HabitItem = ({
             </button>
           </div>
         </div>
-        {/* Notes below heading */}
         {habit.notes && <p className="text-sm text-gray-500 mb-2 mt-1">{habit.notes}</p>}
-        {/* Light horizontal line to separate meta from stats */}
         <hr className="my-2 border-t border-gray-100" />
-        {/* Stats Footer */}
         <div className="flex items-center gap-6 mt-2">
           <div className="flex items-center gap-2">
             <div className="w-24 bg-gray-200 rounded-full h-2">

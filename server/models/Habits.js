@@ -4,7 +4,7 @@ const habitSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User', // optional if you have a User model
+    ref: 'User',
   },
   name: {
     type: String,
@@ -40,14 +40,12 @@ const habitSchema = new mongoose.Schema({
     default: 0, // in seconds
   },
 
-  // 👇 NEW field to indicate how the habit is tracked
   type: {
     type: String,
     enum: ['time', 'checklist', 'counter'],
     required: true,
   },
 
-  // Optional for counter-type habits (like water intake)
   counterValue: {
     type: Number,
     default: 0,

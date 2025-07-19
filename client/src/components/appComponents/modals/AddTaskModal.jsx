@@ -33,7 +33,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits, edit
   });
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Pre-fill form in edit mode
   useEffect(() => {
     if (editingTask) {
       setTask({
@@ -208,7 +207,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits, edit
               )}
             </div>
 
-            {/* Time or Counter Inputs */}
             {task.type === 'time' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -239,7 +237,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits, edit
               </div>
             )}
 
-            {/* Notes */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
               <textarea
@@ -253,7 +250,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits, edit
           </div>
         </div>
 
-        {/* Sticky Footer */}
         <div className="absolute bottom-0 left-0 w-full bg-white border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
           <button
             className="px-4 py-2 bg-black text-white border rounded-md hover:bg-white hover:text-black hover:border-black transition"

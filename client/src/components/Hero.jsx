@@ -25,9 +25,7 @@ function Hero({onStart}) {
 
   return (
     <section className="hero-section pt-48 pb-20 relative overflow-hidden bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-50">
-      {/* Dynamic Background Elements */}
       <div className="absolute inset-0 opacity-60">
-        {/* Animated gradient orbs */}
         <div 
           className="absolute w-96 h-96 rounded-full opacity-40 blur-3xl"
           style={{

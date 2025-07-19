@@ -3,29 +3,25 @@ import React, { useState } from 'react';
 const NUM_DAYS = 365;
 const today = new Date();
 
-// Helper function to subtract days
 const subDays = (date, days) => {
   const result = new Date(date);
   result.setDate(result.getDate() - days);
   return result;
 };
 
-// Helper function to format date
 const formatDate = (date) => {
   return date.toISOString().split('T')[0];
 };
 
-// Helper function to get day of week (0 = Sunday, 6 = Saturday)
 const getDayOfWeek = (date) => {
   return date.getDay();
 };
 
-// Generate dummy data
 const generateActivityData = () => {
   const data = {};
   for (let i = 0; i < NUM_DAYS; i++) {
     const date = formatDate(subDays(today, i));
-    const count = Math.floor(Math.random() * 5); // max 4 activities/day
+    const count = Math.floor(Math.random() * 5); 
     if (count > 0) {
       data[date] = {
         count,
@@ -82,18 +78,15 @@ const CalendarHeatmap = () => {
     setHoveredDate(null);
   };
 
-  // Create the grid - we'll use weeks as columns
   const weeks = [];
   let currentWeek = [];
   
-  // Start from the oldest date
   for (let i = NUM_DAYS - 1; i >= 0; i--) {
     const date = subDays(today, i);
     const dateStr = formatDate(date);
     const dayOfWeek = getDayOfWeek(date);
     const activity = activityData[dateStr] || { count: 0, events: [] };
     
-    // If this is the first day and it's not Sunday, add empty cells
     if (i === NUM_DAYS - 1 && dayOfWeek !== 0) {
       for (let j = 0; j < dayOfWeek; j++) {
         currentWeek.push(null);
@@ -106,9 +99,7 @@ const CalendarHeatmap = () => {
       dayOfWeek
     });
     
-    // If we've completed a week (Sunday to Saturday) or this is the last day
     if (dayOfWeek === 6 || i === 0) {
-      // Fill the rest of the week if needed
       while (currentWeek.length < 7) {
         currentWeek.push(null);
       }
@@ -125,9 +116,7 @@ const CalendarHeatmap = () => {
       <div className="flex justify-between items-center border-b pb-4">
         <h1 className="text-3xl font-bold text-gray-900">Activity Calendar</h1>
       </div>
-      {/* Calendar Container */}
       <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-        {/* Month labels */}
         <div className="flex mb-2 ml-8">
           {monthLabels.map((month, idx) => (
             <div key={month} className="text-xs text-gray-500 mr-8 first:ml-0">
@@ -136,7 +125,6 @@ const CalendarHeatmap = () => {
           ))}
         </div>
         <div className="flex">
-          {/* Day labels */}
           <div className="flex flex-col mr-2">
             {dayLabels.map((day, idx) => (
               <div key={day} className="text-xs text-gray-500 h-3 mb-1 flex items-center">

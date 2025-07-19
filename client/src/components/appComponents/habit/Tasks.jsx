@@ -32,7 +32,6 @@ const Tasks = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
-  // Fetch reminders for user
   useEffect(() => {
     if (!userId) return;
     setRemindersLoading(true);
@@ -66,7 +65,6 @@ const Tasks = () => {
     setIsTaskModalOpen(false);
   };
 
-  // Add reminder via API
   const handleSaveReminder = async (newReminder) => {
     try {
       const response = await fetch('http://localhost:5000/api/reminders', {
@@ -75,7 +73,6 @@ const Tasks = () => {
         body: JSON.stringify({ ...newReminder, userId }),
       });
       if (!response.ok) throw new Error('Failed to save reminder');
-      // Refresh reminders
       const data = await response.json();
       setReminders(prev => [...prev, data.reminder]);
     } catch (err) {
@@ -84,7 +81,6 @@ const Tasks = () => {
     setIsReminderModalOpen(false);
   };
 
-  // Delete reminder
   const handleDeleteReminder = async (reminderId) => {
     try {
       await fetch(`http://localhost:5000/api/reminders/${reminderId}`, { method: 'DELETE' });
@@ -94,7 +90,6 @@ const Tasks = () => {
     }
   };
 
-  // Playful message for no tasks
   const showNoTasks = !habits || habits.length === 0;
 
   return (
@@ -138,7 +133,6 @@ const Tasks = () => {
           </div>
         </div>
         <div className="relative w-full md:w-1/2">
-          {/* You can insert filters or date range pickers here */}
         </div>
       </div>
       <div className='grid grid-cols-3 gap-6'>

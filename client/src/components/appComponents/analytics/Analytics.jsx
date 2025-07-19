@@ -12,7 +12,6 @@ import {
   Flame
 } from 'lucide-react';
 
-// Helper to get completion data for the last 365 days
 const getCompletionData = (habits) => {
   const today = new Date();
   const NUM_DAYS = 365;
@@ -21,7 +20,6 @@ const getCompletionData = (habits) => {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     const dateStr = date.toISOString().split('T')[0];
-    // Count completed habits for this day (assuming habits have a completedDates: [dateStr, ...])
     let count = 0;
     habits.forEach(habit => {
       if (habit.completedDates && habit.completedDates.includes(dateStr)) count++;
@@ -32,7 +30,6 @@ const getCompletionData = (habits) => {
 };
 
 const getGitHubHeatmapData = (habits) => {
-  // Build a map of dateStr => count
   const today = new Date();
   const NUM_DAYS = 365;
   const data = {};
@@ -46,13 +43,11 @@ const getGitHubHeatmapData = (habits) => {
     });
     data[dateStr] = count;
   }
-  // Build weeks: each week is an array of 7 days (Sun-Sat)
   const weeks = [];
   let currentWeek = [];
   let firstDate = new Date(today);
   firstDate.setDate(today.getDate() - NUM_DAYS + 1);
   let dayOfWeek = firstDate.getDay();
-  // Pad the first week with nulls if the year doesn't start on Sunday
   for (let i = 0; i < dayOfWeek; i++) currentWeek.push(null);
   for (let i = NUM_DAYS - 1; i >= 0; i--) {
     const date = new Date(today);
@@ -64,7 +59,6 @@ const getGitHubHeatmapData = (habits) => {
       currentWeek = [];
     }
   }
-  // Pad the last week if needed
   if (currentWeek.length > 0) {
     while (currentWeek.length < 7) currentWeek.push(null);
     weeks.push(currentWeek);
@@ -74,7 +68,6 @@ const getGitHubHeatmapData = (habits) => {
 
 const CompletionCalendar = ({ habits }) => {
   const weeks = getGitHubHeatmapData(habits);
-  // Month labels: only above the first week of each new month
   const monthLabels = [];
   let lastMonth = null;
   weeks.forEach((week, i) => {
@@ -108,15 +101,12 @@ const CompletionCalendar = ({ habits }) => {
     });
   };
   const handleMouseLeave = () => setTooltip({ show: false, content: '', x: 0, y: 0 });
-  // Day labels
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  // Total completions
   const totalCompletions = weeks.flat().reduce((sum, d) => sum + (d && d.count ? d.count : 0), 0);
   return (
     <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mb-6 h-full flex flex-col justify-between">
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Completion Calendar</h3>
       <div className="flex flex-col items-center">
-        {/* Month labels */}
         <div className="flex mb-2 ml-8">
           <div className="w-6" />
           {weeks.map((_, i) => {
@@ -129,7 +119,6 @@ const CompletionCalendar = ({ habits }) => {
           })}
         </div>
         <div className="flex">
-          {/* Day labels */}
           <div className="flex flex-col mr-2 justify-between h-[112px]">
             {dayLabels.map((day, idx) => (
               <div key={day} className="text-xs text-gray-500 h-4 flex items-center justify-end w-6">{day}</div>
@@ -171,7 +160,6 @@ const CompletionCalendar = ({ habits }) => {
             {tooltip.content}
           </div>
         )}
-        {/* Summary */}
         <div className="mt-4 text-sm text-gray-500">{totalCompletions} completions in the last year</div>
       </div>
     </div>
@@ -195,14 +183,11 @@ const Analytics = () => {
   useEffect(() => {
     if (!habits) return;
     setLoading(true);
-    // Calculate analytics from real habits data
     const today = new Date();
     const completedToday = habits.filter(habit => habit.completed).length;
     const completionRate = habits.length > 0 ? Math.round((completedToday / habits.length) * 100) : 0;
-    // Weekly progress: for now, use today for all days (until per-day data is available)
     const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const weeklyProgress = daysOfWeek.map(day => ({ day, completed: completedToday, total: habits.length }));
-    // Top performing habits (by completed status)
     const topHabits = [...habits]
       .sort((a, b) => (b.completed ? 1 : 0) - (a.completed ? 1 : 0))
       .slice(0, 3)
@@ -211,10 +196,10 @@ const Analytics = () => {
       totalHabits: habits.length,
       completedToday,
       completionRate,
-      streak: completedToday > 0 ? 1 : 0, // Placeholder for streak
+      streak: completedToday > 0 ? 1 : 0, 
       weeklyProgress,
       topHabits,
-      timeSpent: 0 // Placeholder, unless you have time data
+      timeSpent: 0 
     });
     setLoading(false);
   }, [habits]);
@@ -282,7 +267,6 @@ const Analytics = () => {
           ))}
         </div>
       </div>
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           icon={Target}
@@ -312,9 +296,7 @@ const Analytics = () => {
           color="blue"
         />
       </div>
-      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Weekly Progress */}
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
           <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
             Weekly Progress
@@ -330,7 +312,6 @@ const Analytics = () => {
             ))}
           </div>
         </div>
-        {/* Top Habits */}
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
           <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
             Top Performing Habits

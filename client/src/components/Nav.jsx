@@ -10,12 +10,10 @@ function Navbar({ Scrolled, onLoginClick, onSignupClick }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          {/* Logo */}
           <div className="flex items-center">
             <img className="w-16 h-auto" src={logo} alt="Logo" />
           </div>
 
-          {/* Navigation Links */}
           <div className="hidden md:flex space-x-10 items-center">
             {["Features", "About Us", "Pricing", "Contact"].map((text, idx) => (
               <a
@@ -29,7 +27,6 @@ function Navbar({ Scrolled, onLoginClick, onSignupClick }) {
             ))}
           </div>
 
-          {/* Auth Buttons */}
           <div className="flex items-center space-x-4">
             <button
               onClick={onLoginClick}

@@ -22,12 +22,10 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
   const timerIntervalRef = useRef(null);
   const messagesEndRef = useRef(null);
 
-  // Persist messages to localStorage on change
   useEffect(() => {
     localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
   }, [messages]);
 
-  // Clear chat on logout (user becomes null)
   useEffect(() => {
     if (!user) {
       localStorage.removeItem(CHAT_STORAGE_KEY);
@@ -35,7 +33,6 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
     }
   }, [user]);
 
-  // Clear session handler
   const handleClearSession = () => {
     setMessages([]);
     localStorage.removeItem(CHAT_STORAGE_KEY);
@@ -50,11 +47,11 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
   }, [messages]);
 
   const quickActions = [
-    { icon: "💪", label: "Fitness", prompt: "Suggest some fitness habits for beginners" },
-    { icon: "🧠", label: "Learning", prompt: "Help me build better learning habits" },
-    { icon: "💼", label: "Productivity", prompt: "I need help with work productivity habits" },
-    { icon: "🧘", label: "Wellness", prompt: "Suggest mindfulness and wellness habits" },
-    { icon: "✨", label: "Bo's choice", prompt: "Surprise me with some habit suggestions" }
+    { label: "Fitness", prompt: "Suggest some fitness habits for beginners" },
+    { label: "Learning", prompt: "Help me build better learning habits" },
+    { label: "Productivity", prompt: "I need help with work productivity habits" },
+    { label: "Wellness", prompt: "Suggest mindfulness and wellness habits" },
+    { label: "Bo's choice", prompt: "Surprise me with some habit suggestions" }
   ];
 
   const SYSTEM_PROMPT =
@@ -70,7 +67,6 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
     setHasStartedConversation(true);
 
     try {
-      // Build chat history for context
       const history = messages
         .filter(m => m.role === 'user' || m.role === 'ai')
         .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.text}`)
@@ -167,7 +163,6 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
 
   return (
     <div className="w-full min-h-screen flex flex-col">
-      {/* Floating Clear Session Button */}
       <div className="fixed top-6 right-8 z-50 group">
         <button
           onClick={handleClearSession}
@@ -189,13 +184,10 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
         </div>
       </div>
 
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         {!hasStartedConversation ? (
-          /* Welcome State */
           <div className="flex-1 flex flex-col items-center justify-center px-6 pb-32">
             <div className="w-full max-w-3xl">
-              {/* Input Box - Centered */}
               <div className="mb-8">
                 <div className="relative bg-gray-50 border border-gray-300 rounded-2xl shadow-sm overflow-hidden">
                   <textarea
@@ -226,7 +218,6 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
                 </div>
               </div>
 
-              {/* Quick Actions */}
               <div className="flex flex-row flex-wrap gap-3 mb-6 justify-start items-center">
                 {quickActions.map((action, index) => (
                   <button
@@ -243,7 +234,6 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
             </div>
           </div>
         ) : (
-          /* Chat State */
           <div className="flex-1 overflow-y-auto px-6">
             <div className="max-w-4xl mx-auto py-6">
               {messages.map((msg, idx) => (
@@ -303,7 +293,6 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
           </div>
         )}
 
-        {/* Bottom Input (Chat Mode) */}
         {hasStartedConversation && (
           <div className="border-t border-gray-200 px-6 py-4 bg-white">
             <div className="max-w-4xl mx-auto">

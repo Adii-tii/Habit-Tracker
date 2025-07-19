@@ -10,7 +10,6 @@ function Pricing() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Free Plan */}
             <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-200 hover:border-yellow-500 transition-all duration-300 transform hover:scale-105">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-4">Free</h3>
@@ -50,7 +49,6 @@ function Pricing() {
               </div>
             </div>
 
-            {/* Pro Plan */}
             <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-yellow-500 hover:border-yellow-600 transition-all duration-300 transform hover:scale-105 relative">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
                 Most Popular

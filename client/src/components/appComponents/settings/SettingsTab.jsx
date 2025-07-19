@@ -2,9 +2,8 @@ import React from 'react';
 import { LogOut, Trash2, Lock, User } from 'lucide-react';
 
 const Settings = () => {
-  // Dummy user info (replace with real user context/props as needed)
   const user = {
-    name: 'Aditi Avinash',
+    name: 'Aditi Avinash', //sam ppp
     email: 'aditi@example.com',
     level: 17,
   };
