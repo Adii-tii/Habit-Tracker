@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, ChevronDown } from 'lucide-react';
 import { useOutletContext } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ const typeOptions = [
   { value: 'counter', label: 'Counter', description: 'Incremental actions' },
 ];
 
-const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits }) => {
+const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits, editingTask }) => {
   const [task, setTask] = useState({
     name: '',
     category: 'health',
@@ -31,8 +31,32 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits }) =>
     targetTime: 0,
     counterTarget: 0,
   });
-
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Pre-fill form in edit mode
+  useEffect(() => {
+    if (editingTask) {
+      setTask({
+        name: editingTask.name || '',
+        category: editingTask.category || 'health',
+        priority: editingTask.priority || 'medium',
+        type: editingTask.type || 'time',
+        notes: editingTask.notes || '',
+        targetTime: editingTask.targetTime ? editingTask.targetTime / 60 : 0, // convert seconds to minutes
+        counterTarget: editingTask.counterTarget || 0,
+      });
+    } else {
+      setTask({
+        name: '',
+        category: 'health',
+        priority: 'medium',
+        type: 'time',
+        notes: '',
+        targetTime: 0,
+        counterTarget: 0,
+      });
+    }
+  }, [editingTask, isOpen]);
 
   const handleChange = (field, value) => {
     setTask((prev) => ({ ...prev, [field]: value }));
@@ -43,7 +67,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits }) =>
       alert('Task name is required');
       return;
     }
-
     try {
       const payload = {
         ...task,
@@ -51,20 +74,30 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits }) =>
         targetTime: task.type === 'time' ? task.targetTime * 60 : 0,
         counterTarget: task.type === 'counter' ? task.counterTarget : 0,
       };
-
-      const res = await fetch('http://localhost:5000/api/habits/saveHabit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error('Failed to save task');
-      const data = await res.json();
-
-      // Add new habit to the existing list
-      setHabits((prev) => [...prev, data.habit]);
-
-      if (onSave) onSave(data.habit);
+      let res, data;
+      if (editingTask && editingTask._id) {
+        // Edit mode: PUT request
+        res = await fetch(`http://localhost:5000/api/habits/${editingTask._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Failed to update task');
+        data = await res.json();
+        // Update the habit in the list
+        setHabits((prev) => prev.map(h => h._id === editingTask._id ? { ...h, ...(data.habit || data) } : h));
+      } else {
+        // Add mode: POST request
+        res = await fetch('http://localhost:5000/api/habits/saveHabit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('Failed to save task');
+        data = await res.json();
+        setHabits((prev) => [...prev, data.habit]);
+      }
+      if (onSave) onSave(data.habit || payload);
       onClose();
     } catch (err) {
       console.error(err);
@@ -85,7 +118,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits }) =>
             <X size={20} />
           </button>
 
-          <h2 className="text-2xl font-semibold text-gray-800 mb-8">Add New Task</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-8">{editingTask ? 'Edit Task' : 'Add New Task'}</h2>
 
           <div className="space-y-8">
             {/* Task Name */}
@@ -232,7 +265,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits }) =>
             className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition"
             onClick={handleSubmit}
           >
-            Add Task
+            {editingTask ? 'Save Changes' : 'Add Task'}
           </button>
         </div>
       </div>

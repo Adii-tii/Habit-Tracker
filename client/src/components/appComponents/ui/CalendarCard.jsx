@@ -42,7 +42,7 @@ const CalendarCard = ({ currentDate }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 w-full max-w-md">
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 w-full max-w-md">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-sm font-semibold text-gray-800">
           {weekStart.toLocaleDateString(undefined, { month: "long", year: "numeric" })}
@@ -56,13 +56,11 @@ const CalendarCard = ({ currentDate }) => {
           </button>
         </div>
       </div>
-
       <div className="grid grid-cols-7 gap-1 text-xs text-center text-gray-500 mb-2">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
           <div key={day} className="font-medium">{day}</div>
         ))}
       </div>
-
       <div className="grid grid-cols-7 gap-1">
         {weekDates.map((date, idx) => (
           <div
@@ -77,7 +75,6 @@ const CalendarCard = ({ currentDate }) => {
           </div>
         ))}
       </div>
-
       <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>

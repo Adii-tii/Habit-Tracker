@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import MyHabits from './MyHabits';
 import { Search, Plus } from 'lucide-react';
@@ -10,13 +10,10 @@ const Tasks = () => {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
 
-  const reminders = [
-    { id: 1, date: '09', title: 'Birthday Party at venue', time: '11:00 - 13:00', type: "Mother's day" },
-    { id: 2, date: '12', title: 'Khoya khoya pyaar', time: '11:00 - 13:00', type: "Mother's day" },
-    { id: 3, date: '23', title: 'Study fair', time: '11:00 - 13:00', type: "Mother's day" },
-    { id: 4, date: '31', title: 'Project Submission', time: '11:00 - 13:00', type: "Cipher school" },
-    { id: 5, date: '31', title: 'Project Submission', time: '11:00 - 13:00', type: "Cipher school" },
-  ];
+  const [reminders, setReminders] = useState([]);
+  const [remindersLoading, setRemindersLoading] = useState(true);
+
+  const [editingHabit, setEditingHabit] = useState(null);
 
   const {
     userName,
@@ -35,41 +32,75 @@ const Tasks = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
+  // Fetch reminders for user
+  useEffect(() => {
+    if (!userId) return;
+    setRemindersLoading(true);
+    fetch(`http://localhost:5000/api/reminders/user/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        setReminders(data);
+        setRemindersLoading(false);
+      })
+      .catch(() => setRemindersLoading(false));
+  }, [userId]);
+
   const handleSaveTask = async(newTask) => {
     try {
-    const response = await fetch('http://localhost:5000/api/habits', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ ...newTask, userId }), // ✅ attach userId here
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      setHabits(prev => [...prev, result.habit]); // optimistic update
-    } else {
-      console.error(result.message);
+      const response = await fetch('http://localhost:5000/api/habits/saveHabit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...newTask, userId }),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setHabits(prev => [...prev, result.habit]);
+      } else {
+        console.error(result.message);
+      }
+    } catch (err) {
+      console.error('Error saving task:', err);
     }
-
-  } catch (err) {
-    console.error('Error saving task:', err);
-  }
-
-  setIsTaskModalOpen(false);
+    setIsTaskModalOpen(false);
   };
 
-  const handleSaveReminder = (newReminder) => {
-    console.log('Reminder to save:', newReminder);
+  // Add reminder via API
+  const handleSaveReminder = async (newReminder) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/reminders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...newReminder, userId }),
+      });
+      if (!response.ok) throw new Error('Failed to save reminder');
+      // Refresh reminders
+      const data = await response.json();
+      setReminders(prev => [...prev, data.reminder]);
+    } catch (err) {
+      alert('Could not save reminder. Try again.');
+    }
     setIsReminderModalOpen(false);
   };
+
+  // Delete reminder
+  const handleDeleteReminder = async (reminderId) => {
+    try {
+      await fetch(`http://localhost:5000/api/reminders/${reminderId}`, { method: 'DELETE' });
+      setReminders(prev => prev.filter(r => r._id !== reminderId));
+    } catch (err) {
+      alert('Could not delete reminder.');
+    }
+  };
+
+  // Playful message for no tasks
+  const showNoTasks = !habits || habits.length === 0;
 
   return (
     <div className="space-y-6 ">
       <div className="flex justify-between items-center border-b pb-4">
         <h1 className="text-3xl font-bold text-gray-900">Activities</h1>
-
         <div className="flex space-x-2">
           <button
             className="bg-yellow-500 text-black  px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center space-x-2"
@@ -78,7 +109,6 @@ const Tasks = () => {
             <Plus size={18} />
             <span>Add Task</span>
           </button>
-
           <button
             className="bg-white border border-yellow-400 text-yellow-500 px-4 py-2 rounded-lg hover:bg-yellow-50 flex items-center space-x-2"
             onClick={() => setIsReminderModalOpen(true)}
@@ -88,9 +118,7 @@ const Tasks = () => {
           </button>
         </div>
       </div>
-
       <div className="flex flex-col md:flex-row md:items-center gap-4">
-  {/* Stats Block */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
           <div className="bg-yellow-400 rounded-xl px-4 py-3 shadow-sm ">
             <p className="text-sm text-black">Streak</p>
@@ -109,42 +137,48 @@ const Tasks = () => {
             <p className="text-xl font-semibold text-yellow-600">Yes</p>
           </div>
         </div>
-
-        {/* Optional: Spacer or Filters on the Right */}
         <div className="relative w-full md:w-1/2">
           {/* You can insert filters or date range pickers here */}
         </div>
       </div>
-
-
       <div className='grid grid-cols-3 gap-6'>
         <div className='col-span-2'>
-          <MyHabits
-            habits={habits}
-            toggleTimer={toggleTimer}
-            timerActive={timerActive}
-            timerSeconds={timerSeconds}
-            toggleCompletion={toggleCompletion}
-            showHistory={showHistory}
-            searchQuery={searchQuery}
-            categoryFilter={categoryFilter}
-            fetchHabits={fetchHabits}
-          />
+          {showNoTasks ? (
+            <div className="text-center text-gray-400 py-12 text-lg font-semibold">
+              🎉 No tasks yet! Add your first habit or task to get started.
+            </div>
+          ) : (
+            <MyHabits
+              habits={habits}
+              toggleTimer={toggleTimer}
+              timerActive={timerActive}
+              timerSeconds={timerSeconds}
+              toggleCompletion={toggleCompletion}
+              showHistory={showHistory}
+              searchQuery={searchQuery}
+              categoryFilter={categoryFilter}
+              fetchHabits={fetchHabits}
+              setEditingHabit={setEditingHabit}
+            />
+          )}
         </div>
         <div className='col-span-1'>
-          <Reminders reminders={reminders} />
+          <Reminders
+            reminders={reminders}
+            loading={remindersLoading}
+            onDelete={handleDeleteReminder}
+          />
         </div>
       </div>
-
       <AddTaskModal
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
+        isOpen={isTaskModalOpen || !!editingHabit}
+        onClose={() => { setIsTaskModalOpen(false); setEditingHabit(null); }}
         onSave={handleSaveTask}
         userId={userId}
         habits={habits}
         setHabits={setHabits}
+        editingTask={editingHabit}
       />
-
       <AddReminderModal
         isOpen={isReminderModalOpen}
         onClose={() => setIsReminderModalOpen(false)}

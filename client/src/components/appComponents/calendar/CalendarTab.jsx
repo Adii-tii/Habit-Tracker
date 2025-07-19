@@ -121,12 +121,10 @@ const CalendarHeatmap = () => {
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="p-6 bg-white">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Activity Calendar</h1>
-        <p className="text-gray-600">Track your daily activities over the past year</p>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center border-b pb-4">
+        <h1 className="text-3xl font-bold text-gray-900">Activity Calendar</h1>
       </div>
-
       {/* Calendar Container */}
       <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
         {/* Month labels */}
@@ -137,7 +135,6 @@ const CalendarHeatmap = () => {
             </div>
           ))}
         </div>
-
         <div className="flex">
           {/* Day labels */}
           <div className="flex flex-col mr-2">
@@ -147,7 +144,6 @@ const CalendarHeatmap = () => {
               </div>
             ))}
           </div>
-
           {/* Heatmap Grid */}
           <div className="flex flex-wrap">
             {weeks.map((week, weekIdx) => (
@@ -167,7 +163,6 @@ const CalendarHeatmap = () => {
             ))}
           </div>
         </div>
-
         {/* Legend */}
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-center space-x-2 text-sm text-gray-600">
@@ -183,29 +178,13 @@ const CalendarHeatmap = () => {
             </div>
             <span>More</span>
           </div>
-          
           <div className="text-sm text-gray-500">
             {Object.values(activityData).reduce((sum, day) => sum + day.count, 0)} activities in the last year
           </div>
         </div>
       </div>
-
-      {/* Custom Tooltip */}
-      {tooltip.show && (
-        <div
-          className="fixed z-50 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none"
-          style={{
-            left: tooltip.x,
-            top: tooltip.y,
-            transform: 'translateX(-50%) translateY(-100%)'
-          }}
-        >
-          {tooltip.content}
-        </div>
-      )}
-
       {/* Statistics */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-lg border border-gray-200">
           <div className="text-2xl font-bold text-gray-900">
             {Object.keys(activityData).length}
@@ -231,6 +210,19 @@ const CalendarHeatmap = () => {
           <div className="text-sm text-gray-600">Avg per active day</div>
         </div>
       </div>
+      {/* Custom Tooltip */}
+      {tooltip.show && (
+        <div
+          className="fixed z-50 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none"
+          style={{
+            left: tooltip.x,
+            top: tooltip.y,
+            transform: 'translateX(-50%) translateY(-100%)'
+          }}
+        >
+          {tooltip.content}
+        </div>
+      )}
     </div>
   );
 };

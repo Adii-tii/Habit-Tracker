@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Flame } from "lucide-react";
 
-const TodaysSummary = () => {
-  const [hovered, setHovered] = useState(false);
-
-  // Demo values
-  const habits = [
-    { id: 1, name: "Workout", completed: true },
-    { id: 2, name: "Read", completed: false },
-    { id: 3, name: "Meditate", completed: true },
-    { id: 4, name: "Drink Water", completed: true },
-  ];
-  const streakCount = 4;
-
+const TodaysSummary = ({ habits = [], streakCount = 0 }) => {
+  const [barWidth, setBarWidth] = useState(0);
   const today = new Date();
   const completedToday = habits.filter(habit => habit.completed).length;
   const totalHabits = habits.length;
   const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
+  const animTimeout = useRef();
+
+  // On mount or when completionRate changes, fill to correct percentage
+  useEffect(() => {
+    setBarWidth(completionRate);
+    return () => clearTimeout(animTimeout.current);
+  }, [completionRate]);
+
+  // On hover, animate from 0 to completionRate
+  const handleMouseEnter = () => {
+    setBarWidth(0);
+    animTimeout.current = setTimeout(() => setBarWidth(completionRate), 20);
+  };
+  // On leave, immediately fill to correct percentage
+  const handleMouseLeave = () => {
+    clearTimeout(animTimeout.current);
+    setBarWidth(completionRate);
+  };
 
   return (
     <div className="bg-yellow-400 rounded-xl p-6 pb-4 text-gray-900">
@@ -24,18 +32,17 @@ const TodaysSummary = () => {
       <div className="text-2xl font-bold mb-4">
         {today.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
       </div>
-
       <div className="space-y-3">
         {/* Habits Completed Fill Animation */}
         <div
           className="relative overflow-hidden rounded-lg cursor-pointer"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <div
             className="absolute inset-0 bg-yellow-500 transition-all duration-700 ease-in-out"
             style={{
-              width: hovered ? `${completionRate}%` : '100%',
+              width: `${barWidth}%`,
               transformOrigin: 'left',
               zIndex: 0,
             }}
@@ -52,7 +59,6 @@ const TodaysSummary = () => {
             </div>
           </div>
         </div>
-
         {/* Streak Card */}
         <div className="bg-white bg-opacity-20 rounded-lg p-3">
           <div className="flex items-center justify-between">

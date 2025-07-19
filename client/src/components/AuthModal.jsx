@@ -11,7 +11,7 @@ import {
 
 import { auth } from "../firebase";
 
-const AuthModal = ({ type = "login", onClose , onSuccess}) => {
+const AuthModal = ({ type = "login", onClose, onSuccess, onSwitch }) => {
   const { setUser } = useUser();
   const isSignup = type === "signup";
 
@@ -184,6 +184,20 @@ const AuthModal = ({ type = "login", onClose , onSuccess}) => {
               {isSignup ? "Sign Up" : "Log In"}
             </button>
           </form>
+          {/* Switch to login link for signup mode */}
+          {isSignup && (
+            <div className="mt-4 text-center text-sm text-gray-500">
+              Already a user?{' '}
+              <button
+                type="button"
+                className="text-yellow-600 hover:underline font-semibold"
+                onClick={() => onSwitch && onSwitch()}
+              >
+                Click here
+              </button>
+              .
+            </div>
+          )}
 
           <div className="my-6 text-center text-gray-500 text-sm">or</div>
 

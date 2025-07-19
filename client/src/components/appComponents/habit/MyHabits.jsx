@@ -3,7 +3,7 @@ import { useState } from "react";
 import {Search} from "lucide-react"; 
 import HabitItem from "./HabitItem";
 
-const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleCompletion, fetchHabits, showHistory, taskType }) => {
+const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleCompletion, fetchHabits, showHistory, taskType, setEditingHabit }) => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
@@ -61,7 +61,7 @@ const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleComple
       <div className="space-y-4">
         {filteredHabits.map(habit => (
           <HabitItem 
-            key={habit.id} 
+            key={habit.id || habit._id} 
             habit={habit} 
             toggleTimer={toggleTimer} 
             timerActive={timerActive} 
@@ -69,6 +69,7 @@ const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleComple
             toggleCompletion={toggleCompletion}
             showHistory={showHistory}
             fetchHabits={fetchHabits}
+            setEditingHabit={setEditingHabit}
           />
         ))}
       </div>

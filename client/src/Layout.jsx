@@ -1,16 +1,66 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Outlet, Navigate } from 'react-router-dom'; // 🛠️ Added Navigate
 import Sidebar from './components/appComponents/layout/Sidebar';
+import BetaNoticeModal from './components/appComponents/ui/BetaNoticeModal';
 import { useUser } from './components/UserContext.jsx';
 
 const AppLayout = () => {
-  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('sidebarCollapsed');
+      return stored === null ? true : stored === 'true';
+    }
+    return true;
+  });
   const [userLevel, setUserLevel] = useState(12);
   const { user } = useUser();
+  const [showBetaModal, setShowBetaModal] = useState(false);
+  const [lastUserId, setLastUserId] = useState(null);
 
   const [habits, setHabits] = useState([]);
   const [timerActive, setTimerActive] = useState(null);
   const [timerSeconds, setTimerSeconds] = useState(0);
+  const [timerStartValue, setTimerStartValue] = useState(0); // stores the habit's last saved timeSpent
+  const timerIntervalRef = useRef(null); // <-- Fix ReferenceError for timerIntervalRef
+
+  // Dark mode state and logic
+  const getInitialDarkMode = () => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('darkMode');
+      if (stored !== null) return stored === 'true';
+      // Fallback to system preference
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  };
+  const [darkMode, setDarkMode] = useState(getInitialDarkMode());
+
+  useEffect(() => {
+    const handler = () => {
+      setDarkMode(getInitialDarkMode());
+    };
+    window.addEventListener('darkmode-toggle', handler);
+    return () => window.removeEventListener('darkmode-toggle', handler);
+  }, []);
+
+  useEffect(() => {
+    // Keep localStorage in sync if changed from other sources
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
+
+  useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', isNavCollapsed);
+  }, [isNavCollapsed]);
+
+  useEffect(() => {
+    if (user && user.id !== lastUserId && user.id !== lastUserId) {
+      setShowBetaModal(true);
+      setLastUserId(user.id);
+    }
+    // eslint-disable-next-line
+  }, [user]);
+
+  const handleCloseBetaModal = () => setShowBetaModal(false);
 
   // ✅ useCallback to avoid unnecessary re-renders
   const fetchHabits = useCallback(async () => {
@@ -34,9 +84,35 @@ const AppLayout = () => {
     fetchHabits();
   }, [fetchHabits]);
 
-  const toggleTimer = (habitId) => {
-    setTimerActive((prev) => (prev === habitId ? null : habitId));
-    setTimerSeconds(0);
+  // Save timeSpent to backend
+  const saveTimeSpent = async (habitId, newTimeSpent) => {
+    try {
+      await fetch(`http://localhost:5000/api/habits/${habitId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ timeSpent: newTimeSpent }),
+      });
+      fetchHabits();
+    } catch (err) {
+      console.error('Failed to save timeSpent:', err);
+    }
+  };
+
+  // Pause/resume logic
+  const toggleTimer = (habitId, habitTimeSpent = 0) => {
+    if (timerActive === habitId) {
+      // Pause: Save timeSpent to backend
+      const newTimeSpent = timerSeconds;
+      saveTimeSpent(habitId, newTimeSpent);
+      setTimerActive(null);
+      setTimerStartValue(0);
+      setTimerSeconds(0);
+    } else {
+      // Start: Resume from last saved value
+      setTimerActive(habitId);
+      setTimerStartValue(habitTimeSpent);
+      setTimerSeconds(habitTimeSpent);
+    }
   };
 
   const toggleCompletion = (habitId) => {
@@ -51,6 +127,18 @@ const AppLayout = () => {
     // Placeholder for future implementation
     console.log(`Show history for habit: ${habitId}`);
   };
+
+  // Timer interval logic
+  useEffect(() => {
+    if (timerActive) {
+      timerIntervalRef.current = setInterval(() => {
+        setTimerSeconds((prev) => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(timerIntervalRef.current);
+    }
+    return () => clearInterval(timerIntervalRef.current);
+  }, [timerActive]);
 
   if (!user) {
     return <Navigate to="/" replace />;
@@ -74,6 +162,8 @@ const AppLayout = () => {
             toggleTimer,
             timerActive,
             timerSeconds,
+            timerStartValue,
+            saveTimeSpent,
             toggleCompletion,
             showHistory,
             setHabits,
@@ -82,6 +172,7 @@ const AppLayout = () => {
           }}
         />
       </div>
+      <BetaNoticeModal open={showBetaModal} onClose={handleCloseBetaModal} />
     </div>
   );
 };
