@@ -24,10 +24,6 @@ const habitSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  difficulty: {
-    type: String,
-    enum: ['easy', 'medium', 'hard'],
-  },
   priority: {
     type: String,
     enum: ['low', 'medium', 'high'],

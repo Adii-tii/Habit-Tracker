@@ -2,7 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import cors from 'cors';
-import userRoutes from './routes/userRoutes.js'; // Import routes
+import userRoutes from './routes/userRoutes.js';
+import habitRoutes from './routes/habitRoutes.js';
 
 dotenv.config();         // Load env variables
 connectDB();             // Connect to MongoDB
@@ -15,6 +16,7 @@ app.use(express.json()); // To parse incoming JSON
 
 // ✅ Routes
 app.use('/api/users', userRoutes);
+app.use('/api/habits', habitRoutes);
 
 // 🏠 Root route
 app.get('/', (req, res) => {

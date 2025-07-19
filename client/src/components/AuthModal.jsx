@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useUser } from "./UserContext.jsx";
 
 import {
   createUserWithEmailAndPassword,
@@ -11,6 +12,7 @@ import {
 import { auth } from "../firebase";
 
 const AuthModal = ({ type = "login", onClose , onSuccess}) => {
+  const { setUser } = useUser();
   const isSignup = type === "signup";
 
   const [email, setEmail] = useState("");
@@ -40,6 +42,7 @@ const AuthModal = ({ type = "login", onClose , onSuccess}) => {
           const data = await res.json();
           if (res.ok) {
             console.log('Sign up successful:', data);
+            setUser(data.user);
             alert("Signup successful!");
             onClose();
             onSuccess?.();
@@ -65,6 +68,7 @@ const AuthModal = ({ type = "login", onClose , onSuccess}) => {
           const data = await res.json();
           if (res.ok) {
             console.log('Login successful:', data);
+            setUser(data.user);
             alert("Login successful!");
             onClose();
             onSuccess?.();

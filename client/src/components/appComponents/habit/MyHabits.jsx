@@ -1,9 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import {Search} from "lucide-react";
+import {Search} from "lucide-react"; 
 import HabitItem from "./HabitItem";
 
-const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleCompletion, showHistory, taskType }) => {
+const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleCompletion, fetchHabits, showHistory, taskType }) => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
@@ -68,6 +68,7 @@ const MyHabits = ({ habits, toggleTimer, timerActive, timerSeconds, toggleComple
             timerSeconds={timerSeconds} 
             toggleCompletion={toggleCompletion}
             showHistory={showHistory}
+            fetchHabits={fetchHabits}
           />
         ))}
       </div>

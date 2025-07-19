@@ -49,7 +49,8 @@ const Homepage = () => {
       {isLoginOpen && (
         <AuthModal type="login" 
         onClose={() => setIsLoginOpen(false)} 
-        onSuccess={handleSuccess}/>
+        onSuccess={handleSuccess}
+        />
       )}
       {isSignupOpen && (
         <AuthModal type="signup" 
