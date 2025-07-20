@@ -85,7 +85,23 @@ MONGODB_URI=your_mongodb_connection_string
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_email_app_password
 ```
-# Generating Google App Password for EMAIL_PASS # If you're using a Gmail account to send emails from your backend (e.g., via Nodemailer), # you need to generate a Google App Password to use as EMAIL_PASS. # This is required if 2-Step Verification is enabled on your account. # Prerequisites: # - 2-Step Verification must be enabled on your Google account. # Steps to Generate the App Password: # 1. Go to: https://myaccount.google.com/security # 2. Under "Signing in to Google", enable "2-Step Verification" if not already enabled. # 3. Once enabled, return to the Security page and click on "App Passwords". # 4. Sign in again if prompted. # 5. Under "Select app", choose "Mail". # 6. Under "Select device", choose "Other (Custom name)" and enter something like: Nodemailer App # 7. Click "Generate". # 8. Copy the 16-character app password that appears. # 9. Update your .env file as follows: EMAIL_USER=your_email@gmail.com EMAIL_PASS=the_16_character_app_password # Keep this password secure and do not share it. ```</code></pre>
+# Generating Google App Password for EMAIL_PASS 
+If you're using a Gmail account to send emails from your backend (e.g., via Nodemailer), you need to generate a Google App Password to use as EMAIL_PASS. This is required if 2-Step Verification is enabled on your account. 
+Prerequisites:  - 2-Step Verification must be enabled on your Google account. 
+
+# Steps to Generate the App Password: 
+1. Go to: https://myaccount.google.com/security
+2. Under "Signing in to Google", enable "2-Step Verification" if not already enabled.
+3. Once enabled, return to the Security page and click on "App Passwords".
+4. Sign in again if prompted.
+5. Under "Select app", choose "Mail". #
+6. Under "Select device", choose "Other (Custom name)" and enter something like: Nodemailer App
+7. Click "Generate". # 8. Copy the 16-character app password that appears.
+8. Update your .env file as follows:
+   ```env
+   EMAIL_USER=your_email@gmail.com
+   EMAIL_PASS=the_16_character_app_password
+   ```
 You can copy and paste this directly into your README.md, and it will render as one continuous black code block on GitHub.
 
 #### Frontend Environment Variables
