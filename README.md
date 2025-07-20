@@ -99,7 +99,8 @@ VITE_GEMINI_API_KEY=your_gemini_api_key
 2. Update the `MONGODB_URI` in your backend `.env` file
 3. The application will automatically create the necessary collections
 
-### Generate your own google gemini api key using google AI studio and replace the existing API key in the code (client\src\components\appComponents\ai\AiSuggestions.jsx). 
+### !!IMPORTANT
+Generate your own google gemini api key using google AI studio and replace the existing API key in the code (client\src\components\appComponents\ai\AiSuggestions.jsx). 
 The API_KEY defined is for demonstration purpose only.
 
 ### 5. Start the Application
@@ -108,7 +109,7 @@ The API_KEY defined is for demonstration purpose only.
 ```bash
 # Start backend server (from server directory)
 cd server
-npm run dev
+node index.js
 
 # Start frontend (from client directory)
 cd client
