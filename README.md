@@ -57,8 +57,8 @@ A modern, full-stack web application designed to help users build better habits,
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/habittracker.git
-cd habittracker
+git clone https://github.com/Adii-tii/Habit-Tracker.git
+cd Habit-Tracker
 ```
 
 ### 2. Install Dependencies
