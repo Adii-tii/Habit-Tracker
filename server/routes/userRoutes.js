@@ -14,6 +14,15 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid email or password' });
 
+    // Handle Google users (they have a special password)
+    if (password === 'google-auth-user' && user.googleId) {
+      res.json({
+        message: 'Login successful',
+        user: { id: user._id, name: user.name, email: user.email }
+      });
+      return;
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid email or password' });
 
@@ -29,9 +38,9 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, googleId } = req.body;
 
-  console.log(name, email, password);
+  console.log(name, email, password, googleId);
 
   try {
     const existingUser = await User.findOne({ email });
@@ -39,13 +48,21 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    let hashedPassword;
+    if (googleId) {
+      // For Google users, use a special password
+      hashedPassword = await bcrypt.hash('google-auth-user', 10);
+    } else {
+      // For regular users, hash their password
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+    }
 
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
+      googleId: googleId || null,
     });
 
     const savedUser = await newUser.save();

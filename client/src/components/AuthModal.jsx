@@ -91,10 +91,64 @@ const AuthModal = ({ type = "login", onClose, onSuccess, onSwitch }) => {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      alert("Google login successful!");
-      onClose();
-      onSuccess?.();
+      setError("");
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      // Register user with backend
+      try {
+        const res = await fetch('http://localhost:5000/api/users/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            name: user.displayName || user.email?.split('@')[0] || 'User',
+            email: user.email,
+            password: 'google-auth-user', // Placeholder password for Google users
+            googleId: user.uid
+          }),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          console.log('Google sign up successful:', data);
+          setUser(data.user);
+          alert("Google sign up successful!");
+          onClose();
+          onSuccess?.();
+        } else if (res.status === 400 && data.message?.includes('already exists')) {
+          // User already exists, try to login
+          const loginRes = await fetch('http://localhost:5000/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              email: user.email,
+              password: 'google-auth-user'
+            }),
+          });
+          
+          const loginData = await loginRes.json();
+          if (loginRes.ok) {
+            console.log('Google login successful:', loginData);
+            setUser(loginData.user);
+            alert("Google login successful!");
+            onClose();
+            onSuccess?.();
+          } else {
+            console.error('Google login failed:', loginData.message);
+            alert(`Google login failed! ${loginData.message}`);
+          }
+        } else {
+          console.error('Google sign up failed:', data.message);
+          alert(`Google sign up failed! ${data.message}`);
+        }
+      } catch (err) {
+        console.error('Backend error:', err);
+        alert('Google authentication failed! Please try again.');
+      }
     } catch (err) {
       setError(err.message);
     }

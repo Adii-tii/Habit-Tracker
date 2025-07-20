@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const FeedbackModal = ({ open, onClose, onSubmit }) => {
   const [feedback, setFeedback] = useState('');
@@ -6,6 +6,17 @@ const FeedbackModal = ({ open, onClose, onSubmit }) => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Reset state when modal opens
+  useEffect(() => {
+    if (open) {
+      setSubmitted(false);
+      setFeedback('');
+      setEmail('');
+      setError('');
+      setLoading(false);
+    }
+  }, [open]);
 
   if (!open) return null;
 

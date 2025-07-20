@@ -170,14 +170,14 @@ const Sidebar = ({ isNavCollapsed, setIsNavCollapsed, userLevel, userName }) => 
             </div>
           </div>
           {/* Feedback Button */}
-          {/* {!isNavCollapsed && (
+          {!isNavCollapsed && (
             <button
               onClick={() => setShowFeedback(true)}
               className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-yellow-500 text-black hover:bg-yellow-600 font-semibold mb-2 transition-all"
             >
               <span>Send Feedback</span>
             </button>
-          )} */}
+          )}
           {/* Logout Button */}
           {!isNavCollapsed && (
           <button
@@ -205,7 +205,7 @@ const Sidebar = ({ isNavCollapsed, setIsNavCollapsed, userLevel, userName }) => 
           }
         `}</style>
       </div>
-      {/* <FeedbackModal open={showFeedback} onClose={() => setShowFeedback(false)} onSubmit={handleFeedbackSubmit} /> */}
+      <FeedbackModal open={showFeedback} onClose={() => setShowFeedback(false)} onSubmit={handleFeedbackSubmit} />
     </>
   );
 };
