@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useUser } from '../../UserContext';
 import { Trash2 } from 'lucide-react';
 
-const GEMINI_API_KEY = "AIzaSyBc4ILMm3TfLJE2OjTmZ6vxRZ9Nbpmoa7o";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent?key=' + GEMINI_API_KEY;
 const CHAT_STORAGE_KEY = 'aiSuggestionsChatHistory';
 
