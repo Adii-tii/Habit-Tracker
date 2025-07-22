@@ -32,10 +32,12 @@ const Tasks = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     if (!userId) return;
     setRemindersLoading(true);
-    fetch(`http://localhost:5000/api/reminders/user/${userId}`)
+    fetch(`${API_BASE_URL}/api/reminders/user/${userId}`)
       .then(res => res.json())
       .then(data => {
         setReminders(data);
@@ -46,7 +48,7 @@ const Tasks = () => {
 
   const handleSaveTask = async(newTask) => {
     try {
-      const response = await fetch('http://localhost:5000/api/habits/saveHabit', {
+      const response = await fetch(`${API_BASE_URL}/api/habits/saveHabit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +69,7 @@ const Tasks = () => {
 
   const handleSaveReminder = async (newReminder) => {
     try {
-      const response = await fetch('http://localhost:5000/api/reminders', {
+      const response = await fetch(`${API_BASE_URL}/api/reminders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...newReminder, userId }),
@@ -83,7 +85,7 @@ const Tasks = () => {
 
   const handleDeleteReminder = async (reminderId) => {
     try {
-      await fetch(`http://localhost:5000/api/reminders/${reminderId}`, { method: 'DELETE' });
+      await fetch(`${API_BASE_URL}/api/reminders/${reminderId}`, { method: 'DELETE' });
       setReminders(prev => prev.filter(r => r._id !== reminderId));
     } catch (err) {
       alert('Could not delete reminder.');

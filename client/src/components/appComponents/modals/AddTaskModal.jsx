@@ -74,9 +74,10 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits, edit
         counterTarget: task.type === 'counter' ? task.counterTarget : 0,
       };
       let res, data;
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       if (editingTask && editingTask._id) {
         // Edit mode: PUT request
-        res = await fetch(`http://localhost:5000/api/habits/${editingTask._id}`, {
+        res = await fetch(`${API_BASE_URL}/api/habits/${editingTask._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -87,7 +88,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, userId, setHabits, habits, edit
         setHabits((prev) => prev.map(h => h._id === editingTask._id ? { ...h, ...(data.habit || data) } : h));
       } else {
         // Add mode: POST request
-        res = await fetch('http://localhost:5000/api/habits/saveHabit', {
+        res = await fetch(`${API_BASE_URL}/api/habits/saveHabit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),

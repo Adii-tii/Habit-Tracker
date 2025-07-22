@@ -67,7 +67,8 @@ const AppLayout = () => {
     if (!user?.id) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/habits/user/${user.id}`);
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const response = await fetch(`${API_BASE_URL}/api/habits/user/${user.id}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -87,7 +88,8 @@ const AppLayout = () => {
   // Save timeSpent to backend
   const saveTimeSpent = async (habitId, newTimeSpent) => {
     try {
-      await fetch(`http://localhost:5000/api/habits/${habitId}`, {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      await fetch(`${API_BASE_URL}/api/habits/${habitId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ timeSpent: newTimeSpent }),

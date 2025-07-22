@@ -5,6 +5,7 @@ import { Trash2 } from 'lucide-react';
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent?key=' + GEMINI_API_KEY;
 const CHAT_STORAGE_KEY = 'aiSuggestionsChatHistory';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
   const { user } = useUser();
@@ -123,7 +124,7 @@ const AISuggestions = ({ onAcceptSuggestion, fetchHabits }) => {
       // Sanitize type
       const allowedTypes = ['time', 'checklist', 'counter'];
       const safeType = allowedTypes.includes((suggestion.type || '').toLowerCase()) ? suggestion.type.toLowerCase() : 'checklist';
-      const res = await fetch('http://localhost:5000/api/habits/saveHabit', {
+      const res = await fetch(`${API_BASE_URL}/api/habits/saveHabit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

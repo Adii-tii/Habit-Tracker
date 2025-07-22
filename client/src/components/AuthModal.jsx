@@ -31,7 +31,8 @@ const AuthModal = ({ type = "login", onClose, onSuccess, onSwitch }) => {
           displayName: name || username,
         });
         try {
-          const res = await fetch('http://localhost:5000/api/users/register', {
+          const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+          const res = await fetch(`${API_BASE_URL}/api/users/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -57,7 +58,8 @@ const AuthModal = ({ type = "login", onClose, onSuccess, onSwitch }) => {
       
       } else {
         try {
-          const res = await fetch('http://localhost:5000/api/users/login', {
+          const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+          const res = await fetch(`${API_BASE_URL}/api/users/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -97,7 +99,8 @@ const AuthModal = ({ type = "login", onClose, onSuccess, onSwitch }) => {
       
       // Register user with backend
       try {
-        const res = await fetch('http://localhost:5000/api/users/register', {
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+        const res = await fetch(`${API_BASE_URL}/api/users/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -119,7 +122,8 @@ const AuthModal = ({ type = "login", onClose, onSuccess, onSwitch }) => {
           onSuccess?.();
         } else if (res.status === 400 && data.message?.includes('already exists')) {
           // User already exists, try to login
-          const loginRes = await fetch('http://localhost:5000/api/users/login', {
+          const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+          const loginRes = await fetch(`${API_BASE_URL}/api/users/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

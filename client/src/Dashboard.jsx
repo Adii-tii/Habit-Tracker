@@ -43,6 +43,8 @@ const Dashboard = () => {
   const [remindersLoading, setRemindersLoading] = useState(true);
   const navigate = useNavigate();
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // Calculate today's completion rate
   const completedToday = habits.filter(habit => habit.completed).length;
   const totalHabits = habits.length;
@@ -54,7 +56,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!userId) return;
     setRemindersLoading(true);
-    fetch(`http://localhost:5000/api/reminders/user/${userId}`)
+    fetch(`${API_BASE_URL}/api/reminders/user/${userId}`)
       .then(res => res.json())
       .then(data => {
         setReminders(data);

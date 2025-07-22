@@ -49,9 +49,11 @@ const Sidebar = ({ isNavCollapsed, setIsNavCollapsed, userLevel, userName }) => 
     "flex flex-col h-screen sticky top-0 bg-black border-r border-gray-800 shadow-lg transition-all duration-300 z-40";
   const sidebarWidth = isNavCollapsed ? "w-[80px]" : "w-72";
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // Feedback submit handler
   const handleFeedbackSubmit = async ({ feedback, email }) => {
-    await fetch('http://localhost:5000/api/feedback', {
+    await fetch(`${API_BASE_URL}/api/feedback`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ feedback, email }),

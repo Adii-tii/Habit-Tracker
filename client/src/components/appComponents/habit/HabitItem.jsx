@@ -50,7 +50,8 @@ const HabitItem = ({
 
   const updateHabit = async (updates) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/habits/${habit._id}`, {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const res = await fetch(`${API_BASE_URL}/api/habits/${habit._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +68,8 @@ const HabitItem = ({
 
   const deleteHabit = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/habits/${habit._id}`, {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const res = await fetch(`${API_BASE_URL}/api/habits/${habit._id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete");

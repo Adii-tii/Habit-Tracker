@@ -10,11 +10,13 @@ const QuickTaskBox = () => {
   const [loading, setLoading] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // Fetch tasks from backend
   useEffect(() => {
     if (!userId) return;
     setLoading(true);
-    fetch(`http://localhost:5000/api/quicktasks/user/${userId}`)
+    fetch(`${API_BASE_URL}/api/quicktasks/user/${userId}`)
       .then(res => res.json())
       .then(data => {
         setTasks(data);
@@ -27,7 +29,7 @@ const QuickTaskBox = () => {
     const trimmed = inputValue.trim();
     if (!trimmed || !userId) return;
     try {
-      const res = await fetch("http://localhost:5000/api/quicktasks", {
+      const res = await fetch(`${API_BASE_URL}/api/quicktasks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: trimmed, userId }),
@@ -42,7 +44,7 @@ const QuickTaskBox = () => {
 
   const toggleDone = async (id, done) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/quicktasks/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/quicktasks/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ done: !done }),
@@ -56,7 +58,7 @@ const QuickTaskBox = () => {
 
   const removeTask = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/quicktasks/${id}`, { method: "DELETE" });
+      await fetch(`${API_BASE_URL}/api/quicktasks/${id}`, { method: "DELETE" });
       setTasks(prev => prev.filter(t => t._id !== id));
     } catch (err) {
       alert("Could not delete task.");
